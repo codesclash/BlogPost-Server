@@ -7,7 +7,7 @@ let Post = require('../models/post.model')
 //View All POST (no comments----)
 router.get('/',(req,res)=>{
     Post.find({}, { comments: 0 })
-    .then((newPosts)=>res.json(newPosts))
+    .then((newPosts)=>res.status(200).json("Post Added Successfully!"))
     .catch(err=> res.status(400).json({'error':err}))
 })
 
@@ -17,7 +17,7 @@ router.get('/',(req,res)=>{
 router.get('/:postId',(req,res)=>{
     const postId = req.params.postId;
     Post.findById(postId)
-    .then((post)=>res.json(post))
+    .then((post)=>res.status(200).json(post))
     .catch(err=> res.status(400).json({'error':err}))
 })
 
@@ -41,14 +41,14 @@ router.post('/add',(req,res)=>{
         comments,
     })
 
-    newPost.save().then(()=>res.json('Post Added Successfully!'))
+    newPost.save().then(()=>res.status(200).json(newPost))
     .catch(err => res.status(400).json('Error' + err))
 })
 
 //Delete a post
 router.delete('/delete/:postId',(req,res)=>{
     const postId = req.params.postId;
-    Post.findByIdAndDelete(postId).then(()=>res.json('Post Deleted Successfully!'))
+    Post.findByIdAndDelete(postId).then(()=>res.status(200).json('Post Deleted Successfully!'))
     .catch(err => res.status(400).json('Error' + err))
  })
 
@@ -69,7 +69,7 @@ router.post('/update/:postId',(req,res)=>{
             author:authorName,
             datePublished:datePublished,
         }})
-        .then(()=>res.json('Post Updated Successfully!'))
+        .then(()=>res.status(200).json('Post Updated Successfully!'))
         .catch(err => res.status(400).json('Error' + err))
     })
 
@@ -86,7 +86,7 @@ router.post('/:postId/addcomment',(req,res)=>{
         Post.findOneAndUpdate(
           { _id: postId },
           { $push: { comments: newComment } }
-        ).then(res.json('Comment Added Successfully!'))
+        ).then(res.status(200).json('Comment Added Successfully!'))
         .catch(err => res.status(400).json('Error' + err))
         });
     
@@ -97,7 +97,7 @@ router.delete('/:postId/deletecomment/:commentId',(req,res)=>{
     Post.findOneAndUpdate(
         { _id: postId },
         { $pull: { comments: { _id: commentId } } }
-      ).then(res.json('Comment Deleted Successfully!'))
+      ).then(res.status(200).json('Comment Deleted Successfully!'))
       .catch(err => res.status(400).json('Error' + err))
       });
 
