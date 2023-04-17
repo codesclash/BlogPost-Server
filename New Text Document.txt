@@ -1,0 +1,2 @@
+snapshot testing
+functional testing
