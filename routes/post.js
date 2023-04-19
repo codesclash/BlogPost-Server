@@ -3,8 +3,10 @@ const router = express.Router();
 let Post = require("../models/post.model");
 
 //View All POST (no comments----)
-router.get("/", (req, res) => {
-  Post.find({}, { comments: 0 })
+router.get("/home/:pageNumber", (req, res) => {
+  const pageNumber = parseInt(req.params.pageNumber);
+  const skip = (pageNumber - 1) * 10;
+  Post.find({}, { comments: 0 }).skip(skip).limit(10)
     .then((newPosts) => res.status(200).json(newPosts))
     .catch((err) => res.status(400).json({ error: err }));
 });
@@ -13,7 +15,8 @@ router.get("/", (req, res) => {
 router.get("/:postId", (req, res) => {
   const postId = req.params.postId;
   Post.findById(postId)
-    .then((post) => res.status(200).json(post))
+    .then((post) => 
+      res.status(200).json(post))
     .catch((err) => res.status(400).json({ error: err }));
 });
 
